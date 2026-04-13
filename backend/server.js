@@ -424,13 +424,20 @@ app.put('/api/admin/users/:id/role', async (req, res) => {
 // Administratorul poate vedea toate fisele pacientilor, cu date despre medic
 app.get('/api/admin/pacienti', async (req, res) => {
   try {
-    const pacienti = await Pacient.find().sort({ nume: 1, prenume: 1 });
+    const pacienti = await Pacient.find().sort({ nume: 1, prenume: 1 }).lean();
     const medici = await User.find({ rol: 'medic' }).select('nume');
     const mapMedici = new Map(medici.map((m) => [String(m._id), m.nume]));
 
-    const pacientiCuMedic = pacienti.map((p) => ({
-      ...p.toObject(),
-      medicNume: mapMedici.get(p.medicUid) || 'Necunoscut',
+    // Căutăm cea mai recentă măsurătoare pentru fiecare pacient, pentru a avea date LIVE
+    const pacientiCuMedic = await Promise.all(pacienti.map(async (p) => {
+      const ultimaMasuratoare = await Masuratoare.findOne({ id_pacient: p._id.toString() }).sort({ timestamp: -1 });
+
+      return {
+        ...p,
+        medicNume: mapMedici.get(p.medicUid) || 'Necunoscut',
+        puls: ultimaMasuratoare ? (ultimaMasuratoare.puls_mediu || p.puls) : p.puls,
+        temperatura: ultimaMasuratoare ? (ultimaMasuratoare.temperatura_medie || p.temperatura) : p.temperatura,
+      };
     }));
 
     res.json(pacientiCuMedic);

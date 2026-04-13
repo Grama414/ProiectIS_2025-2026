@@ -86,6 +86,12 @@ function DashboardMedic() {
     if (status === 'alarm') return 'Alarmă'
   }
 
+  const getStatusDinTemperatura = (temperatura) => {
+    if (temperatura >= 38.5) return 'alarma'
+    if (temperatura >= 37.5) return 'avertizare'
+    return 'ok'
+  }
+
   const handleSalveaza = async () => {
     try {
       const uid = sessionStorage.getItem('uid')
@@ -229,7 +235,7 @@ function DashboardMedic() {
                 <p className="text-sm text-gray-500">Alarme Active</p>
                 <div className="bg-red-100 rounded-full p-2"><Bell size={16} className="text-red-500" /></div>
               </div>
-              <p className="text-3xl font-bold text-gray-800">{pacienti.filter(p => p.status === 'alarm').length}</p>
+              <p className="text-3xl font-bold text-gray-800">{pacienti.filter(p => getStatusDinTemperatura(p.temperatura) === 'alarm').length}</p>
               <p className="text-xs text-red-500 mt-1">↑ Necesită atenție</p>
             </div>
             <div className="bg-white rounded-2xl p-5 shadow-sm">
@@ -237,7 +243,7 @@ function DashboardMedic() {
                 <p className="text-sm text-gray-500">Avertizări</p>
                 <div className="bg-yellow-100 rounded-full p-2"><Activity size={16} className="text-yellow-500" /></div>
               </div>
-              <p className="text-3xl font-bold text-gray-800">{pacienti.filter(p => p.status === 'warn').length}</p>
+              <p className="text-3xl font-bold text-gray-800">{pacienti.filter(p => getStatusDinTemperatura(p.temperatura) === 'warn').length}</p>
               <p className="text-xs text-yellow-500 mt-1">→ De monitorizat</p>
             </div>
           </div>

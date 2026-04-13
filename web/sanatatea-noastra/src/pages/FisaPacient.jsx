@@ -143,6 +143,12 @@ function FisaPacient() {
       console.error('Eroare la adaugarea recomandarii:', err)
     }
   }
+  const getStatusTemperatura = (temp) => {
+    if (temp >= 38.5) return { label: 'Avertizare', color: 'bg-red-100 text-red-700 border-red-300' }
+    if (temp >= 37.5) return { label: 'Monitorizare', color: 'bg-yellow-100 text-yellow-700 border-yellow-300' }
+    return null
+  }
+
 
   if (loading) return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -298,12 +304,22 @@ function FisaPacient() {
                 </div>
                 <span className="font-bold text-red-500">{pacient.puls} bpm</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-orange-50 rounded-xl">
+              <div className={`flex items-center justify-between p-3 rounded-xl ${
+                pacient.temperatura >= 38.5 ? 'bg-red-100' :
+                pacient.temperatura >= 37.5 ? 'bg-yellow-50' : 'bg-orange-50'
+              }`}>
                 <div className="flex items-center gap-2">
                   <Thermometer size={16} className="text-orange-500" />
                   <span className="text-sm text-gray-600">Temperatură</span>
                 </div>
-                <span className="font-bold text-orange-500">{pacient.temperatura}°C</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-orange-500">{pacient.temperatura}°C</span>
+                  {getStatusTemperatura(pacient.temperatura) && (
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${getStatusTemperatura(pacient.temperatura).color}`}>
+                      {getStatusTemperatura(pacient.temperatura).label}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
                 <div className="flex items-center gap-2">

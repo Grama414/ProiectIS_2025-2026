@@ -194,6 +194,7 @@ function Login() {
               placeholder="••••••••"
               value={parola}
               onChange={(e) => setParola(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && (modRegistrare ? handleRegistrare() : handleLogin())}
               className="flex-1 outline-none text-sm text-gray-700"
             />
             <button onClick={() => setShowParola(!showParola)}>
