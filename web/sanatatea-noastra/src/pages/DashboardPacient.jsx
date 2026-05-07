@@ -29,13 +29,8 @@ function DashboardPacient() {
           const responseMasuratori = await api.get(`/masuratori/${datePacient._id}`)
           
           if (responseMasuratori.data && responseMasuratori.data.length > 0) {
-             const masuratori = responseMasuratori.data
-               // Sortăm după timestamp / oră, dacă e cazul
-               .sort((a, b) => {
-                  if(a.ora && b.ora) return a.ora.localeCompare(b.ora);
-                  return new Date(a.timestamp) - new Date(b.timestamp);
-               })
-
+             const masuratori = responseMasuratori.data; // Datele vin deja sortate de la backend
+             
              // Extragem cea mai recentă măsurătoare pentru a actualiza cardurile din Acasă
              const ultima = masuratori[masuratori.length - 1];
              datePacient = {

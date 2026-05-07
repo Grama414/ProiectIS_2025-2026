@@ -31,11 +31,8 @@ function FisaPacient() {
         // 2. Cerem masuratorile pentru grafice
         const snapM = await api.get(`/masuratori/${id}`)
         if (snapM.data && snapM.data.length > 0) {
-          const masuratori = snapM.data.sort((a, b) => {
-            if(a.ora && b.ora) return a.ora.localeCompare(b.ora);
-            return new Date(a.timestamp) - new Date(b.timestamp);
-          })
-          
+          const masuratori = snapM.data; // Datele vin deja sortate de la backend
+
           // Suprascriem valorile afișate cu cele mai recente măsurători de la senzor
           if (datePacient) {
             const ultima = masuratori[masuratori.length - 1];
