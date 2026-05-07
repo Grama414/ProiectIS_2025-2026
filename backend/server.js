@@ -559,7 +559,10 @@ async function startServer() {
 
     // Folosim un broker public gratuit pentru testare.
     // Pentru producție, îți poți face cont pe HiveMQ Cloud (gratuit) și pui aici URL-ul lor.
-    const mqttBrokerUrl = 'mqtt://test.mosquitto.org';
+    
+    // const mqttBrokerUrl = 'mqtt://test.mosquitto.org';
+    const mqttBrokerUrl = 'mqtt://broker.hivemq.com';
+    
     const mqttClient = mqtt.connect(mqttBrokerUrl);
 
     mqttClient.on('connect', () => {
